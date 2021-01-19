@@ -1,0 +1,45 @@
+{
+    "policy": {
+        "policy_id": "hot_delete_workflow",
+        "description": "Hot-delete policy based on index size",
+        "default_state": "hot",
+        "states": [
+            {
+                "name": "hot",
+                "actions": [
+                    {
+                        "rollover": {
+                            "min_size": "5gb"
+                        }
+                    }
+                ],
+                "transitions": [
+                    {
+                        "state_name": "warm"
+                    }
+                ]
+            },
+            {
+                "name": "warm",
+                "actions": [],
+                "transitions": [
+                    {
+                        "state_name": "delete",
+                        "conditions": {
+                            "min_index_age": "30d"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "delete",
+                "actions": [
+                    {
+                        "delete": {}
+                    }
+                ],
+                "transitions": []
+            }
+        ]
+    }
+}
